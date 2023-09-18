@@ -1,0 +1,4 @@
+int n 3 1000;
+rloop lp n
+    loop g lp
+        rarray_2 ra -10000 10000;

@@ -110,6 +110,7 @@ def generate_loop(i, synlist):
 
     ittrs = line[3]
     ittrs = get_value(ittrs)
+    values[line[2]] = ittrs
 
     nll = 0
     for ln in range(i+1, len(synlist)):
@@ -121,6 +122,30 @@ def generate_loop(i, synlist):
 
     for _ in range(ittrs-1):
         output += generate_tc(synlist[i+1:i+1+nll])
+        values[line[2]] -= 1
+
+    return output
+
+
+def generate_rloop(i, synlist):
+    output = ""
+    line = synlist[i]
+
+    ittrs = line[3]
+    ittrs = get_value(ittrs)
+    values[line[2]] = ittrs
+
+    nll = 0
+    for ln in range(i+1, len(synlist)):
+        nspaces = synlist[ln][0] - line[0]
+        if nspaces > 0 and nspaces % 4 == 0:
+            nll += 1
+        else:
+            break
+
+    for _ in range(ittrs-1, -1, -1):
+        output += generate_tc(synlist[i+1:i+1+nll])
+        values[line[2]] -= 1
 
     return output
 
@@ -152,6 +177,9 @@ def generate_tc(synlist):
 
         elif "loop" in line[1]:
             output += generate_loop(i, synlist)
+        
+        elif "rloop" in line[1]:
+            output += generate_rloop(i, synlist)
 
         if output and output[-1] != '\n':
             if line[-1] == ';':
